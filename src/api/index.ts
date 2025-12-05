@@ -3,6 +3,7 @@ import instance from "../utils/request.ts";
 
 // 导入host_url
 const host_url = import.meta.env.VITE_BASE_API;
+console.log("host_url:", host_url);
 
 // 校验参数是否为对象类型
 const validateParams = (params: any) => {

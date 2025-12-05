@@ -2,18 +2,62 @@
     <div class="startview">
         <div class="container">
             <div class="title">
-                <img class="logo" src="/vue.svg" alt="logo" loading="lazy" />
+                <img
+                    class="logo"
+                    src="/vue.svg"
+                    alt="logo"
+                    loading="lazy"
+                />
                 <span class="text">数通中台 --新加坡</span>
             </div>
+            <div class="desc">
+                <img v-if="titleDisplay?.icon" src="../assets/icon/returnIcon.svg" alt="返回图标" loading="lazy" />
+                {{ titleDisplay?.item }}
+            </div>
             <div class="components">
-                <LoginComponents />
+                <router-view v-slot="{ Component }">
+                    <Transition
+                        name="drawer"
+                        mode="out-in"
+                    >
+                        <component
+                            :is="Component"
+                            :key="$route.path"
+                        />
+                    </Transition>
+                </router-view>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import LoginComponents from '../components/StartComponents/LoginComponents.vue';
+import { ref, computed } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const titleObj = ref([
+    {
+        item: '登录',
+        icon: false
+    },
+    {
+        item: '忘记密码',
+        icon: true
+    }
+])
+
+// 使用 computed 监听路由变化
+const titleDisplay = computed(() => {
+    switch (route.path) {
+        case '/start/login':
+            return titleObj.value[0];
+        case '/start/forget':
+            return titleObj.value[1];
+        default:
+            return { item: '', icon: false };
+    }
+});
 </script>
 
 <style scoped lang="scss">
@@ -23,33 +67,77 @@ import LoginComponents from '../components/StartComponents/LoginComponents.vue';
     background: url('../assets/images/bg.webp') no-repeat center center;
     background-size: cover;
     position: relative;
-    .container{
+
+    .container {
         position: absolute;
         top: 0;
         left: 10%;
         width: 25%;
+        min-width: 20rem;
         height: 100%;
         background-color: rgba($color: #fff, $alpha: .1);
         backdrop-filter: blur(10px);
         padding: 4rem 2.5rem;
-        .title{
+
+        .title {
             width: 100%;
             height: 3rem;
             display: flex;
             align-items: center;
-            .logo{
+
+            .logo {
                 margin-right: 1rem;
             }
-            .text{
+
+            .text {
                 font-weight: bold;
                 font-size: 1.2rem;
                 white-space: nowrap;
             }
+
         }
-        .components{
+
+        .desc {
+            font-size: 1.1rem;
+            letter-spacing: .1rem;
+            margin-top: .3rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .components {
             width: 100%;
-            height: calc(100% - 3rem);
+            height: calc(100% - 6rem);
+            overflow: hidden;
         }
     }
+}
+
+// 抽屉动画
+.drawer-enter-active,
+.drawer-leave-active {
+    transition: all 0.3s;
+}
+
+// 进入动画：从右侧滑入
+.drawer-enter-from {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.drawer-enter-to {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+// 离开动画：向左侧滑出
+.drawer-leave-from {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.drawer-leave-to {
+    transform: translateX(-100%);
+    opacity: 0;
 }
 </style>

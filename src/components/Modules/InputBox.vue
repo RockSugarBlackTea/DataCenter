@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineExpose } from 'vue';
+import { ref } from 'vue';
 import passwordDisplayIcon from '../../assets/icon/passwordDisplay.svg';
 import passwordNoDisplayIcon from '../../assets/icon/passwordNoDisyplay.svg';
 import clearIcon from '../../assets/icon/clear.svg';
@@ -66,7 +66,10 @@ function displayPassword() {
 }
 
 defineExpose({
-    getValue: () => inputValue.value
+    getValue: () => inputValue.value,
+    clearInputValue: () => {
+        inputValue.value = '';
+    }
 });
 </script>
 

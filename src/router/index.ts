@@ -7,7 +7,23 @@ const routes: any = [
     {
         path: '/start',
         component: () => import('../views/StartViews.vue'),
-        meta: { requiresAuth: false }
+        meta: { requiresAuth: false },
+        children: [
+            {
+                path: '',
+                redirect: '/start/login' // 默认进入 login
+            },
+            {
+                path: 'forget',
+                component: () => import('../components/StartComponents/ForgetComponents.vue'),
+                meta: { requiresAuth: false },
+            },
+            {
+                path: 'login',
+                component: () => import('../components/StartComponents/LoginComponents.vue'),
+                meta: { requiresAuth: false },
+            }
+        ]
     }
 ]
 
