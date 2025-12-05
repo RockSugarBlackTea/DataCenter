@@ -1,41 +1,15 @@
 <template>
-    <div
-        ref="inputBox"
-        :class="['inputBox', isFocused ? 'focusInputBox' : '']"
-    >
-        <div
-            ref="placeholderRef"
-            :class="['placeholder', isFocused ? 'focusPlaceholder' : '']"
-        >{{ placeholderText }}</div>
+    <div ref="inputBox" :class="['inputBox', isFocused ? 'focusInputBox' : '']">
+        <div ref="placeholderRef" :class="['placeholder', isFocused ? 'focusPlaceholder' : '']">{{ placeholderText }}
+        </div>
         <div class="container">
-            <input
-                ref="inputRef"
-                class="input"
-                :type="type"
-                v-model="inputValue"
-                @focus="bindInputFocus"
-                @blur="bindInputUnfocus"
-            />
-            <div
-                v-if="isClearIcon && inputValue !== ''"
-                class="clearIcon"
-            >
-                <img
-                    src="../../assets/icon/clear.svg"
-                    alt="clear"
-                    loading="lazy"
-                    @click="clearInputValue"
-                    class="clear"
-                    v-if="type !== 'password'"
-                />
-                <img
-                    src="../../assets/icon/passwordNoDisplay.svg"
-                    alt="nodisplay"
-                    loading="lazy"
-                    @click="displayPassword"
-                    ref="passwordIconRef"
-                    v-else
-                />
+            <input ref="inputRef" class="input" :type="type" v-model="inputValue" @focus="bindInputFocus"
+                @blur="bindInputUnfocus" />
+            <div v-if="isClearIcon && inputValue !== ''" class="clearIcon">
+                <img :src="clearIcon" alt="clear" loading="lazy" @click="clearInputValue" class="clear"
+                    v-if="!isPasswordInput" />
+                <img :src="passwordDisplayState ? passwordDisplayIcon : passwordNoDisplayIcon" alt="nodisplay"
+                    loading="lazy" @click="displayPassword" ref="passwordIconRef" v-else />
             </div>
         </div>
     </div>
@@ -43,6 +17,9 @@
 
 <script setup lang="ts">
 import { ref, defineProps, defineExpose } from 'vue';
+import passwordDisplayIcon from '../../assets/icon/passwordDisplay.svg';
+import passwordNoDisplayIcon from '../../assets/icon/passwordNoDisyplay.svg';
+import clearIcon from '../../assets/icon/clear.svg';
 
 const props = defineProps<{
     placeholder?: string;
@@ -59,6 +36,8 @@ const isFocused = ref(false); // 输入框是否聚焦状态
 const placeholderText = ref(props.placeholder || '请输入内容'); // 占位符文本
 const type = ref(props.type || 'text'); // 输入框类型
 const isClearIcon = ref(props.isClearIcon || true); // 是否显示清除图标(默认显示)
+const passwordDisplayState = ref(false); // 密码显示状态
+const isPasswordInput = ref(props.type === 'password'); // 是否为密码输入框
 
 function bindInputFocus() {
     if (placeholderRef.value) {
@@ -79,14 +58,10 @@ function clearInputValue() {
 function displayPassword() {
     if (type.value === 'password') {
         type.value = 'text';
-        if (passwordIconRef.value) {
-            passwordIconRef.value.src = '../../assets/icon/passwordDisplay.svg';
-        }
+        passwordDisplayState.value = true;
     } else {
         type.value = 'password';
-        if (passwordIconRef.value) {
-            passwordIconRef.value.src = '../../assets/icon/passwordNoDisplay.svg';
-        }
+        passwordDisplayState.value = false;
     }
 }
 
