@@ -12,6 +12,10 @@
         />
         <div class="forget">
             <router-link to="/start/forget">忘记密码？</router-link>
+            <div>
+                <span style="color: black;">没有账户?</span>
+                <router-link to="/start/register">注册账号</router-link>
+            </div>
         </div>
         <div class="protocol">
             <el-checkbox v-model="protocolChecked"></el-checkbox>
@@ -195,7 +199,9 @@ function verifyM2(ABytes: Uint8Array, M1Hex: string, KBytes: Uint8Array, M2Hex: 
         margin-bottom: 1.2rem;
         color: #307def;
         font-size: .8rem;
-        text-align: end;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .protocol {

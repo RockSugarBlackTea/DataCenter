@@ -22,6 +22,11 @@ const routes: any = [
                 path: 'login',
                 component: () => import('../components/StartComponents/LoginComponents.vue'),
                 meta: { requiresAuth: false },
+            },
+            {
+                path: 'register',
+                component: () => import('../components/StartComponents/RegisterComponents.vue'),
+                meta: { requiresAuth: false },
             }
         ]
     }
