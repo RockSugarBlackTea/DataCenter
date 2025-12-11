@@ -41,33 +41,18 @@ function destroyWorkerPool(): void {
 class CryptoWorkerPool {
     private workers: Map<Worker, boolean>;
     private queue: Array<{ resolve: (value: bigint) => void; reject: (error: Error) => void; data: { base: string; exponent: string; modulus: string } }>;
-    private poolSize: number;
     private useWorkers: boolean;
 
     constructor(poolSize: number = 2) {
         this.workers = new Map();
         this.queue = [];
-        this.poolSize = poolSize;
         this.useWorkers = typeof Worker !== 'undefined';
         this.initializeWorkers();
     }
 
     initializeWorkers() {
-        if (!this.useWorkers) {
-            console.log('[WorkerPool] Web Worker 不可用，将使用主线程计算');
-            return;
-        }
-
-        try {
-            for (let i = 0; i < this.poolSize; i++) {
-                const worker = new Worker('/static/pages/cryptoWorker.js');
-                this.workers.set(worker, false); // false = 不忙
-            }
-            console.log(`[WorkerPool] 初始化 ${this.poolSize} 个 Worker`);
-        } catch (error) {
-            console.error('[WorkerPool] 初始化 Worker 失败:', error);
-            this.useWorkers = false;
-        }
+        console.log('[WorkerPool] 使用主线程计算 modPow（SRP 注册）');
+        this.useWorkers = false;
     }
 
     async modPow(base: bigint, exponent: bigint, modulus: bigint): Promise<bigint> {
@@ -301,4 +286,4 @@ function hexToBytes(hex: string): Uint8Array {
 }
 
 
-export { N, g, k, bnToHex,  bnToBytes, hexToBytes, randomHex,getWorkerPool, destroyWorkerPool, returnVerifierAndSalt, computerVerifier, computeHashedPassword, generateSalt, modPowDirect };
+export { N, g, k, bnToHex, bnToBytes, hexToBytes, randomHex, getWorkerPool, destroyWorkerPool, returnVerifierAndSalt, computerVerifier, computeHashedPassword, generateSalt, modPowDirect };

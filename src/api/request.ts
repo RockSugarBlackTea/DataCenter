@@ -21,8 +21,8 @@ export function handleLoginStep2(data: any) {
 /**
  * 获取图片验证码
  */
-export function getImageCaptcha() { 
-    return post('/api/captcha');
+export function getImageCaptcha(data:any) { 
+    return post('/api/captcha',data);
 }
 
 /**
@@ -30,3 +30,13 @@ export function getImageCaptcha() {
  * @param data 
  * @returns
  */
+export function sendEmailCode(data: any) { 
+    return post('/api/send-email', data);
+}
+
+/**
+ * 注册用户
+ */
+export function handleRegisterServer(data: any) {
+    return post('/api/register', data);
+}

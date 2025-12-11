@@ -1,15 +1,41 @@
 <template>
-    <div ref="inputBox" :class="['inputBox', isFocused ? 'focusInputBox' : '']">
-        <div ref="placeholderRef" :class="['placeholder', isFocused ? 'focusPlaceholder' : '']">{{ placeholderText }}
+    <div
+        ref="inputBox"
+        :class="['inputBox', isFocused ? 'focusInputBox' : '']"
+    >
+        <div
+            ref="placeholderRef"
+            :class="['placeholder', isFocused ? 'focusPlaceholder' : '']"
+        >{{ placeholderText }}
         </div>
         <div class="container">
-            <input ref="inputRef" class="input" :type="type" v-model="inputValue" @focus="bindInputFocus"
-                @blur="bindInputUnfocus" />
-            <div v-if="isClearIcon && inputValue !== ''" class="clearIcon">
-                <img :src="clearIcon" alt="clear" loading="lazy" @click="clearInputValue" class="clear"
-                    v-if="!isPasswordInput" />
-                <img :src="passwordDisplayState ? passwordDisplayIcon : passwordNoDisplayIcon" alt="nodisplay"
-                    loading="lazy" @click="displayPassword" ref="passwordIconRef" v-else />
+            <input
+                ref="inputRef"
+                class="input"
+                :type="type"
+                v-model="inputValue"
+                @focus="bindInputFocus"
+                @blur="bindInputUnfocus"
+            />
+            <div
+                v-if="isClearIcon && inputValue !== ''"
+                class="clearIcon"
+            >
+                <img
+                    :src="icons.clear"
+                    alt="clear"
+                    loading="lazy"
+                    @click="clearInputValue"
+                    class="clear"
+                    v-if="!isPasswordInput"
+                />
+                <img
+                    :src="passwordDisplayState ? icons.passwordDisplay : icons.passwordNoDisplay"
+                    alt="nodisplay"
+                    loading="lazy"
+                    @click="displayPassword"
+                    v-else
+                />
             </div>
         </div>
     </div>
@@ -27,10 +53,14 @@ const props = defineProps<{
     isClearIcon?: boolean;
     value?: string;
 }>();
-const inputBox = ref<HTMLDivElement | null>(null); // 输入框整体的DOM
-const inputRef = ref<HTMLInputElement | null>(null); // 输入框的DOM
+
+// 将图片资源暴露到模板作用域
+const icons = {
+    passwordDisplay: passwordDisplayIcon,
+    passwordNoDisplay: passwordNoDisplayIcon,
+    clear: clearIcon
+};
 const placeholderRef = ref<HTMLDivElement | null>(null); // 占位符的DOM
-const passwordIconRef = ref<HTMLImageElement | null>(null); // 密码显示图标的DOM
 const inputValue = ref(props.value || ''); // 输入框的值
 const isFocused = ref(false); // 输入框是否聚焦状态
 const placeholderText = ref(props.placeholder || '请输入内容'); // 占位符文本

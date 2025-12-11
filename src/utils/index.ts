@@ -304,6 +304,24 @@ function getDeviceInfo() {
     }
 }
 
+interface DebounceFunction {
+    <T extends (...args: any[]) => any>(fn: T, delay: number): (...args: Parameters<T>) => void;
+}
+
+const myDebounce: DebounceFunction = (fn, delay) => {
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    return function (this: any, ...args) { 
+        if (timer !== null) { 
+            clearTimeout(timer);
+        }
+
+        timer = setTimeout(() => {
+            fn.apply(this, args);
+            timer = null;
+        }, delay);
+    }
+}
+
 export {
     parseTime,
     getNowTime,
@@ -311,4 +329,5 @@ export {
     setCookie,
     getCookie,
     getDeviceInfo,
+    myDebounce
 };
